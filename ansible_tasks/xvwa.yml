@@ -1,0 +1,75 @@
+# MySQL Server
+---
+
+- name: Create database
+  mysql_db:
+    name: "{{ dbname }}"
+    state: present
+
+- name: Clone XVWA
+  git:
+    repo: "https://github.com/s4n7h0/xvwa.git"
+    dest: "{{ working_dir }}/xvwa"
+    force: yes
+  become: True
+
+- name: Update xvwa config - webroot
+  lineinfile:
+    path: "{{ working_dir }}/xvwa/config.php"
+    regexp: '^\$XVWA_WEBROOT'
+    line: '$XVWA_WEBROOT = "{{ xvwa_webroot }}";'
+  become: True
+
+- name: Update xvwa config - database name
+  lineinfile:
+    path: "{{ working_dir }}/xvwa/config.php"
+    regexp: '^\$dbname'
+    line: '$dbname = "{{ dbname }}";'
+  become: True
+
+- name: Update xvwa config - user
+  lineinfile:
+    path: "{{ working_dir }}/xvwa/config.php"
+    regexp: '^\$user'
+    line: '$user = "{{ dbuser }}";'
+  become: True
+
+- name: Update xvwa config - pass
+  lineinfile:
+    path: "{{ working_dir }}/xvwa/config.php"
+    regexp: '^\$pass'
+    line: '$pass = "{{ dbpass }}";'
+  become: True
+
+- name: PHP config - file_uploads
+  lineinfile:
+    path: "/etc/php/7.2/apache2/php.ini"
+    regexp: '^file_uploads'
+    line: 'file_uploads = On'
+  become: True
+
+- name: PHP config - allow_url_fopen
+  lineinfile:
+    path: "/etc/php/7.2/apache2/php.ini"
+    regexp: '^allow_url_fopen'
+    line: 'allow_url_fopen = On'
+  become: True
+
+- name: PHP config - allow_url_include
+  lineinfile:
+    path: "/etc/php/7.2/apache2/php.ini"
+    regexp: '^allow_url_include'
+    line: 'allow_url_include = On'
+  become: True
+
+- name: Change permissions of upload foder
+  file:
+    path: "{{ working_dir }}/xvwa/img/uploads"
+    owner: www-data
+    group: www-data
+    recurse: yes
+  become: True
+
+- name: Run database setup
+  uri:
+    url: "http://localhost/xvwa/setup/?action=do"

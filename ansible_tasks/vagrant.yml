@@ -1,0 +1,23 @@
+---
+- hosts: all
+  vars:
+    app_dir: "/vagrant"
+    working_dir: "/var/www/html"
+    xvwa_webroot: ''
+    host: "localhost"
+    dbname: "xvwa"
+    dbuser: "root"
+    dbpass: "vagrant"
+  tasks:
+    - name: update box
+      apt:
+        update_cache: True
+      become: True
+
+    - include_tasks: mysql_install.yml
+
+    - include_tasks: apache_install.yml
+
+    - include_tasks: php.yml
+
+    - include_tasks: xvwa.yml
