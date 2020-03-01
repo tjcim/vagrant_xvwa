@@ -116,9 +116,9 @@
 
     - name: Add vagrant user
       mysql_user:
-        name: "vagrant"
+        name: "{{ second_dbuser }}"
         host: "localhost"
-        password: "vagrant"
+        password: "{{ second_dbpass }}"
         priv: "*.*:ALL"
         state: "present"
 

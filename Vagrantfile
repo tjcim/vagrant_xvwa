@@ -4,7 +4,7 @@ The machine is up and running. Visit the application here:
 
   http://localhost:5005/xvwa/
 
-URL to setup or reset database:
+URL to setup or reset database (run automatically during provisioning):
 
   http://localhost:5005/xvwa/setup/
 

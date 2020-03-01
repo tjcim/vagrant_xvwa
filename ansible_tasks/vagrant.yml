@@ -1,13 +1,15 @@
 ---
 - hosts: all
   vars:
-    app_dir: "/vagrant"
     working_dir: "/var/www/html"
     xvwa_webroot: ''
     host: "localhost"
     dbname: "xvwa"
     dbuser: "root"
     dbpass: "vagrant"
+    # Second database username and pass for access with account other than root
+    second_dbuser: "vagrant"
+    second_dbpass: "vagrant"
   tasks:
     - name: update box
       apt:
